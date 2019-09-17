@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">VidyoWorks Android</string>
+
+    <string name="permission_rationale">Several permissions required for VidyoClient SDK usage.</string>
+
+    <string name="guest_join">Guest join</string>
+    <string name="join">Join</string>
+
+    <string name="login_into_portal">Login into portal</string>
+
+    <string name="portal">Portal</string>
+    <string name="room_key">Room key</string>
+
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+
+    <string name="login">Login</string>
+    <string name="join_room">Join Personal Room</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="logout">Logout</string>
+
+    <string name="toggle_stats">Toggle statistic</string>
+    <string name="end_call">End call</string>
+</resources>
