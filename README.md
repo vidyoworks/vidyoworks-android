@@ -1,4 +1,4 @@
-# VidyoWorks NDK Android Integration
+# VidyoWorks Android
 VidyoWorks platform Android sample demonstrates VidyoClient SDK implementation via in-out events pre-built on NDK layer.
 
 ## Documentation & SDK:
