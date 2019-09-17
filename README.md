@@ -30,7 +30,7 @@ LOCAL_SRC_FILES := lib/$(TARGET_ARCH_ABI)/libVidyoClientApp.so and 'TARGET_ARCH_
 5. Observe both 32 & 64 bit architectures under *~/jni/jniLibs/* created.
 
 
-Corresponding 32 & 64-bit architecture binaries.
+##### Corresponding 32 & 64-bit architecture binaries.
 
 > Note (64bit support): Pay attention to **jni/Application.mk**. Now **APP_ABI** is defined as: *APP_ABI := armeabi-v7a arm64-v8a* in order to build both architectures. Obiviously, **jni/lib/Android.mk** LOCAL_SRC_FILES param should refer target architecture ABI during build: *LOCAL_SRC_FILES := lib/$(TARGET_ARCH_ABI)/libVidyoClientApp.so*.
 **TARGET_ARCH_ABI** - would be replaced with 'armeabi-v7a' or 'arm64-v8a' depends on current build architecture.
