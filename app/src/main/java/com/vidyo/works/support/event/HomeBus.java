@@ -10,7 +10,7 @@ public class HomeBus<T> extends BusBase<T, HomeBus.Call> {
     }
 
     public enum Call implements CallBase {
-        INIT_PASS, CALLING, STARTED, ENDED, MESSAGE, ERROR, LOGIN, LOGOUT
+        INIT_PASS, CALLING, STARTED, ENDED, MESSAGE, ERROR, LOGIN, LOGOUT, GROUP_CHAT_MESSAGE
     }
 
     @Override

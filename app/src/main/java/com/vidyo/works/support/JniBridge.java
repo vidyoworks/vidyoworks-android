@@ -263,4 +263,14 @@ public class JniBridge {
 
     @SuppressWarnings("JniMissingFunction")
     public native void SetPixelDensity(double density);
+
+    @SuppressWarnings("JniMissingFunction")
+    public native void SendGroupChatMessage(String message);
+
+    @Keep
+    public void onGroupChatMessageEvent(String displayName, String message) {
+        Log.i(TAG, "group chat message received! Name: " + displayName + ", Message: " + message);
+
+        EventBus.getDefault().post(new HomeBus<>(HomeBus.Call.GROUP_CHAT_MESSAGE, displayName, message));
+    }
 }

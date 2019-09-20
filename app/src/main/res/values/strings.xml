@@ -22,4 +22,6 @@
 
     <string name="toggle_stats">Toggle statistic</string>
     <string name="end_call">End call</string>
+
+    <string name="send_group_chat_message">Send message</string>
 </resources>

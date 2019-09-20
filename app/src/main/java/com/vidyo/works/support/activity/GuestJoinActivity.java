@@ -29,6 +29,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Random;
+
 /**
  * A Guest join screen that offers join via portal + roomKey + display name.
  */
@@ -183,6 +185,7 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
 
             addEndCallView(controlForm);
             addActionViewView(controlForm);
+            addSendChatMessageView(controlForm);
 
             controlForm.setVisibility(View.GONE);
         }
@@ -280,6 +283,12 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
                 } else {
                     Toast.makeText(this, "No network available", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case GROUP_CHAT_MESSAGE:
+                String displayName = (String) event.getValues()[0];
+                String chatMessage = (String) event.getValues()[1];
+
+                Toast.makeText(this, "User: " + displayName + "; Message: " + chatMessage, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -383,5 +392,26 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
 
         endCall.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
         endCall.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+    }
+
+    private void addSendChatMessageView(ViewGroup frame) {
+        Button sendMessage = new Button(this);
+        sendMessage.setText(R.string.send_group_chat_message);
+        sendMessage.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (jniBridge != null) {
+                    int x = new Random().nextInt(100);
+                    String message = "hello~" + x;
+
+                    jniBridge.SendGroupChatMessage(message);
+                }
+            }
+        });
+
+        frame.addView(sendMessage);
+
+        sendMessage.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        sendMessage.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
     }
 }

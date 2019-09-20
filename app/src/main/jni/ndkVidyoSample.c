@@ -27,6 +27,9 @@ void GetParticipants();
 void SendErrorMessage();
 void SendActiveUsersInfo(const char *info);
 
+/* Declare method to get it referenced upper in the code */
+void OnGroupChatMessageEvent(const char *name, const char *message);
+
 void createDetailsEntityFromDetailsAtInfo(JNIEnv *env, jobject *deObject, VidyoClientRequestParticipantDetails* entityInfo);
 void createDetailsEntity(JNIEnv *env, jobject *detailsObject, const char* name, const char* uri, const char* type);
 
@@ -235,7 +238,14 @@ void GuiOnOutEventCallback(VidyoClientOutEvent event, VidyoVoidPtr param, VidyoU
     } else if (event == VIDYO_CLIENT_OUT_EVENT_REMOTE_SOURCE_ADDED)
     {
         LOGI("Received source event: VIDYO_CLIENT_OUT_EVENT_REMOTE_SOURCE_ADDED");
-    }
+    } else if (event == VIDYO_CLIENT_OUT_EVENT_GROUP_CHAT) {
+        LOGI("Received event: VIDYO_CLIENT_OUT_EVENT_GROUP_CHAT");
+
+        VidyoClientOutEventGroupChat *event = (VidyoClientOutEventGroupChat*) param;
+
+        /* Send over to the Java side */
+        OnGroupChatMessageEvent(event->displayName, event->message);
+     }
 }
 
 static JNIEnv *getJniEnv(jboolean *isAttached)
@@ -1189,4 +1199,54 @@ JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_SetPixelDensity(JN
     SendPrivateRequest(VIDYO_CLIENT_PRIVATE_REQUEST_SET_PIXEL_DENSITY, &req, sizeof(VidyoClientPrivateRequestSetPixelDensity), 0);
 
     FUNCTION_EXIT;
+}
+
+/* */
+JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_SendGroupChatMessage(JNIEnv *env, jobject jobj, jstring message)
+{
+	VidyoClientInEventGroupChat event;
+
+    const char *messageC = (*env)->GetStringUTFChars(env, message, NULL);
+	strlcpy(event.message, messageC, sizeof(event.message));
+
+	VidyoBool result = VidyoClientSendEvent(VIDYO_CLIENT_IN_EVENT_GROUP_CHAT, &event, sizeof(VidyoClientInEventGroupChat));
+	LOGI("Sending group chat message over. Result: %d", result);
+}
+
+/** Send group chat message to the Java layer through JNI */
+void OnGroupChatMessageEvent(const char *name, const char *message)
+{
+        jboolean isAttached;
+        JNIEnv *env;
+        jmethodID methodID;
+
+        jstring jName;
+        jstring jMessage;
+
+        LOGE("Send OnGroupChatEvent Begin");
+
+        env = getJniEnv(&isAttached);
+        if (env == NULL) goto FAIL0;
+
+        methodID = getApplicationJniMethodId(env, applicationJniObj, "onGroupChatMessageEvent", "(Ljava/lang/String;Ljava/lang/String;)V");
+        if (methodID == NULL) goto FAIL1;
+
+        jName = (*env)->NewStringUTF(env, name);
+        jMessage = (*env)->NewStringUTF(env, message);
+
+        (*env)->CallVoidMethod(env, applicationJniObj, methodID, jName, jMessage);
+
+		if (isAttached) {
+			(*global_vm)->DetachCurrentThread(global_vm);
+		}
+
+        LOGE("Send OnGroupChatEvent End");
+        return;
+FAIL1:
+		if (isAttached) {
+			(*global_vm)->DetachCurrentThread(global_vm);
+		}
+FAIL0:
+        LOGE("Send OnGroupChatEvent FAILED");
+        return;
 }
