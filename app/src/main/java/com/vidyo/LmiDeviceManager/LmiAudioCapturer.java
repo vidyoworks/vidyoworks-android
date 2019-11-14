@@ -114,21 +114,14 @@ public class LmiAudioCapturer {
 				return MediaRecorder.AudioSource.MIC;
 		}
 
-		// ====== disable the workaround for Lollipop for now, and revert to original code =====
 		/*
-		if (Build.VERSION.SDK_INT >= 21) {
-			// Started from Lollipop, many devices default MIC might have very weak volume.
-			// Use MediaRecorder.AudioSource.CAMCORDER: Microphone audio source with same orientation
-			// as camera if available, the main device microphone otherwise
-			return MediaRecorder.AudioSource.CAMCORDER;
-		} else */
-		if (Build.VERSION.SDK_INT >= 16) {
-			//TODO: add code to check the echo cancellation and audio gain support
-			return MediaRecorder.AudioSource.VOICE_COMMUNICATION;
-		} else if (Build.VERSION.SDK_INT >= 11) {
+		 * Starting from Android Pie (9.0 ~ 28) the VOICE_COMMUNICATION audio source type is picking the wrong microphone device (small mic).
+		 * To workaround this issue we have to use DEFAULT audio source type.
+		 */
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
 			return MediaRecorder.AudioSource.VOICE_COMMUNICATION;
 		} else {
-			return MediaRecorder.AudioSource.MIC;
+			return MediaRecorder.AudioSource.DEFAULT;
 		}
 	}
 
