@@ -852,28 +852,35 @@ return;
 
 JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_SetCameraDevice(JNIEnv *env, jobject jobj, jint camera)
 {
-	// FUNCTION_ENTRY
 	VidyoClientRequestConfiguration requestConfig;
 	VidyoClientSendRequest(VIDYO_CLIENT_REQUEST_GET_CONFIGURATION, &requestConfig, sizeof(VidyoClientRequestConfiguration));
 
-	/*
-	 * Value of 0 is (currently) used to signify the front camera
-	 */
-	if (camera == 0)
-	{
-		requestConfig.currentCamera = 0;
-	}
-	/*
-	 * Value of 1 is (currently) used to signify the back camera
-	 */
-	else if (camera == 1)
-	{
-		requestConfig.currentCamera = 1;
-	}
+	requestConfig.currentCamera = camera;
 
 	VidyoClientSendRequest(VIDYO_CLIENT_REQUEST_SET_CONFIGURATION, &requestConfig, sizeof(VidyoClientRequestConfiguration));
+}
 
-        //FUNCTION_EXIT
+JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_CycleCamera(JNIEnv *env, jobject jobj)
+{
+	VidyoClientRequestConfiguration requestConfig;
+	VidyoClientSendRequest(VIDYO_CLIENT_REQUEST_GET_CONFIGURATION, &requestConfig, sizeof(VidyoClientRequestConfiguration));
+
+	int camera = requestConfig.currentCamera;
+
+    int i;
+	for (i = 0; i < requestConfig.numberCameras; ++i) {
+        LOGE("Camera device:: Index: %d, Name: %s", i, requestConfig.cameras[i]);
+    }
+
+    if (camera == (requestConfig.numberCameras - 1)) {
+        camera = 0;
+    } else {
+        camera++;
+    }
+
+    requestConfig.currentCamera = camera;
+
+	VidyoClientSendRequest(VIDYO_CLIENT_REQUEST_SET_CONFIGURATION, &requestConfig, sizeof(VidyoClientRequestConfiguration));
 }
 
 JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_Configure(JNIEnv *env, jobject jobj)

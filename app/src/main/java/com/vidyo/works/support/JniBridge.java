@@ -142,6 +142,9 @@ public class JniBridge {
     public native void SetCameraDevice(int camera);
 
     @SuppressWarnings("JniMissingFunction")
+    public native void CycleCamera();
+
+    @SuppressWarnings("JniMissingFunction")
     public native void SetPreviewMode(int mode); // 1 - Pip, 0 - None, 2 - Dock
 
     @SuppressWarnings("JniMissingFunction")

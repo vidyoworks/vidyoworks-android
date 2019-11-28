@@ -186,6 +186,7 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
             addEndCallView(controlForm);
             addActionViewView(controlForm);
             addSendChatMessageView(controlForm);
+            addCycleCameraView(controlForm);
 
             controlForm.setVisibility(View.GONE);
         }
@@ -413,5 +414,25 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
 
         sendMessage.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
         sendMessage.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+    }
+
+    private void addCycleCameraView(ViewGroup frame) {
+        Button cycleCamera = new Button(this);
+        cycleCamera.setText(R.string.cycle_camera);
+
+        cycleCamera.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (jniBridge != null) {
+                    jniBridge.CycleCamera();
+                }
+            }
+        });
+
+        frame.addView(cycleCamera);
+
+        cycleCamera.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        cycleCamera.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
     }
 }
