@@ -663,7 +663,7 @@ JNIEXPORT void Java_com_vidyo_works_support_JniBridge_Construct(JNIEnv* env, job
 
     logParam.logLevelsAndCategories = logLevelC;
     logParam.logSize = 1000000;
-    logParam.logBaseFileName = "VidyoConferenceLog_";
+    logParam.logBaseFileName = "VidyoLog_";
     logParam.pathToLogDir = logDirC;
     logParam.pathToDumpDir = logDirC;
     logParam.pathToConfigDir = pathDirC;

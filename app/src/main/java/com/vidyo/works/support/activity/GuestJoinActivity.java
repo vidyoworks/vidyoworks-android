@@ -1,10 +1,11 @@
 package com.vidyo.works.support.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -12,11 +13,14 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.vidyo.LmiDeviceManager.LmiDeviceManagerView;
 import com.vidyo.LmiDeviceManager.LmiVideoCapturer;
 import com.vidyo.works.support.JniBridge;
@@ -38,7 +42,7 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
 
     private static final String TAG = "GuestJoin";
 
-    private static final String PORTAL = "https://<VIDOY_PORTAL_PLACEHOLDER>.com";
+    private static final String PORTAL = "https://<VIDYO_PORTAL_PLACEHOLDER>.com";
     private static final String KEY = "<ROOM_KEY_PLACEHOLDER>";
     private static final String NAME = "Guest Mobile";
 
@@ -48,8 +52,6 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
     private EditText user;
 
     private View joinForm;
-
-    private LinearLayout controlForm;
 
     private JniBridge jniBridge;
 
@@ -144,6 +146,42 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.call_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.end_call:
+                if (jniBridge != null) jniBridge.LeaveConference();
+                break;
+            case R.id.statistic:
+                if (jniBridge != null) {
+                    showStatistic = !showStatistic;
+                    jniBridge.setStatsVisibility(showStatistic);
+                }
+                break;
+            case R.id.chat_message:
+                if (jniBridge != null) {
+                    int x = new Random().nextInt(100);
+                    String message = "hello~" + x;
+                    jniBridge.SendGroupChatMessage(message);
+                }
+                break;
+            case R.id.cycle_camera:
+                if (jniBridge != null) jniBridge.CycleCamera();
+                break;
+            case R.id.send_logs:
+                AppUtils.sendLogs(this);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
@@ -163,32 +201,15 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
         jniBridge = new JniBridge();
         orientationManager = new OrientationManager(this, jniBridge);
 
-        boolean result = jniBridge.initialize(
-                AppUtils.writeCaCertificates(this),
-                AppUtils.getAndroidCacheDir(this),
-                AppUtils.getAndroidInternalMemDir(this),
-                this);
+        boolean result = jniBridge.initialize(this);
 
         if (result) {
-            // jniBridge.Configure();
-
             ViewGroup frame = findViewById(R.id.main_content);
-
-            controlForm = new LinearLayout(this);
-            controlForm.setOrientation(LinearLayout.HORIZONTAL);
 
             lmiDeviceManagerView = new LmiDeviceManagerView(this, this);
             lmiDeviceManagerView.setVisibility(View.GONE);
 
             frame.addView(lmiDeviceManagerView);
-            frame.addView(controlForm);
-
-            addEndCallView(controlForm);
-            addActionViewView(controlForm);
-            addSendChatMessageView(controlForm);
-            addCycleCameraView(controlForm);
-
-            controlForm.setVisibility(View.GONE);
         }
     }
 
@@ -304,8 +325,6 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
         joinForm.setVisibility(View.GONE);
         lmiDeviceManagerView.setVisibility(View.VISIBLE);
 
-        controlForm.setVisibility(View.VISIBLE);
-
         if (jniBridge != null) {
             jniBridge.SetCameraDevice(AppUtils.REAR_CAMERA);
             jniBridge.StartConferenceMedia();
@@ -327,8 +346,6 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
 
         joinForm.setVisibility(View.VISIBLE);
         lmiDeviceManagerView.setVisibility(View.GONE);
-
-        controlForm.setVisibility(View.GONE);
 
         stopDevices();
 
@@ -355,84 +372,5 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
     private void pauseCall() {
         lmiDeviceManagerView.onPause();
         jniBridge.EnterBackground();
-    }
-
-    private void addActionViewView(ViewGroup frame) {
-        Button changeStatView = new Button(this);
-        changeStatView.setText(R.string.toggle_stats);
-
-        changeStatView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (jniBridge != null) {
-                    showStatistic = !showStatistic;
-                    jniBridge.setStatsVisibility(showStatistic);
-                }
-            }
-        });
-
-        frame.addView(changeStatView);
-
-        changeStatView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        changeStatView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-    }
-
-    private void addEndCallView(ViewGroup frame) {
-        Button endCall = new Button(this);
-        endCall.setText(R.string.end_call);
-        endCall.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (jniBridge != null) {
-                    jniBridge.LeaveConference();
-                }
-            }
-        });
-
-        frame.addView(endCall);
-
-        endCall.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        endCall.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-    }
-
-    private void addSendChatMessageView(ViewGroup frame) {
-        Button sendMessage = new Button(this);
-        sendMessage.setText(R.string.send_group_chat_message);
-        sendMessage.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (jniBridge != null) {
-                    int x = new Random().nextInt(100);
-                    String message = "hello~" + x;
-
-                    jniBridge.SendGroupChatMessage(message);
-                }
-            }
-        });
-
-        frame.addView(sendMessage);
-
-        sendMessage.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        sendMessage.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-    }
-
-    private void addCycleCameraView(ViewGroup frame) {
-        Button cycleCamera = new Button(this);
-        cycleCamera.setText(R.string.cycle_camera);
-
-        cycleCamera.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (jniBridge != null) {
-                    jniBridge.CycleCamera();
-                }
-            }
-        });
-
-        frame.addView(cycleCamera);
-
-        cycleCamera.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        cycleCamera.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-
     }
 }

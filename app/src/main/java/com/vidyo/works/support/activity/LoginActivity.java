@@ -1,17 +1,21 @@
 package com.vidyo.works.support.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.vidyo.LmiDeviceManager.LmiDeviceManagerView;
 import com.vidyo.LmiDeviceManager.LmiVideoCapturer;
 import com.vidyo.works.support.JniBridge;
@@ -24,13 +28,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Random;
+
 /**
  * A login screen that offers login via email/password into desired portal tenant.
  * After successful login you can join into the personal room.
  */
 public class LoginActivity extends AppCompatActivity implements LmiDeviceManagerView.Callback {
 
-    private static final String PORTAL = "https://<VIDOY_PORTAL_PLACEHOLDER>.com";
+    private static final String PORTAL = "https://<VIDYO_PORTAL_PLACEHOLDER>.com";
     private static final String USER = "<USER_NAME_PLACEHOLDER>";
     private static final String PASSWORD = "<PASSWORD_PLACEHOLDER>";
 
@@ -42,8 +48,6 @@ public class LoginActivity extends AppCompatActivity implements LmiDeviceManager
     private View loginPanelForm;
     private View loginForm;
     private View logoutForm;
-
-    private LinearLayout controlForm;
 
     private JniBridge jniBridge;
 
@@ -140,6 +144,43 @@ public class LoginActivity extends AppCompatActivity implements LmiDeviceManager
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.call_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.end_call:
+                if (jniBridge != null) jniBridge.LeaveConference();
+                break;
+            case R.id.statistic:
+                if (jniBridge != null) {
+                    showStatistic = !showStatistic;
+                    jniBridge.setStatsVisibility(showStatistic);
+                }
+                break;
+            case R.id.chat_message:
+                if (jniBridge != null) {
+                    int x = new Random().nextInt(100);
+                    String message = "hello~" + x;
+                    jniBridge.SendGroupChatMessage(message);
+                }
+                break;
+            case R.id.cycle_camera:
+                if (jniBridge != null) jniBridge.CycleCamera();
+                break;
+            case R.id.send_logs:
+                AppUtils.sendLogs(this);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
@@ -158,28 +199,15 @@ public class LoginActivity extends AppCompatActivity implements LmiDeviceManager
         jniBridge = new JniBridge();
         orientationManager = new OrientationManager(this, jniBridge);
 
-        boolean result = jniBridge.initialize(
-                AppUtils.writeCaCertificates(this),
-                AppUtils.getAndroidCacheDir(this),
-                AppUtils.getAndroidInternalMemDir(this),
-                this);
+        boolean result = jniBridge.initialize(this);
 
         if (result) {
             ViewGroup frame = findViewById(R.id.main_content);
-
-            controlForm = new LinearLayout(this);
-            controlForm.setOrientation(LinearLayout.HORIZONTAL);
 
             lmiDeviceManagerView = new LmiDeviceManagerView(this, this);
             lmiDeviceManagerView.setVisibility(View.GONE);
 
             frame.addView(lmiDeviceManagerView);
-            frame.addView(controlForm);
-
-            addEndCallView(controlForm);
-            addActionViewView(controlForm);
-
-            controlForm.setVisibility(View.GONE);
         }
     }
 
@@ -276,8 +304,6 @@ public class LoginActivity extends AppCompatActivity implements LmiDeviceManager
         loginPanelForm.setVisibility(View.GONE);
         lmiDeviceManagerView.setVisibility(View.VISIBLE);
 
-        controlForm.setVisibility(View.VISIBLE);
-
         if (jniBridge != null) {
             jniBridge.SetCameraDevice(0);
             jniBridge.StartConferenceMedia();
@@ -296,8 +322,6 @@ public class LoginActivity extends AppCompatActivity implements LmiDeviceManager
 
         loginPanelForm.setVisibility(View.VISIBLE);
         lmiDeviceManagerView.setVisibility(View.GONE);
-
-        controlForm.setVisibility(View.GONE);
 
         stopDevices();
 
@@ -357,43 +381,5 @@ public class LoginActivity extends AppCompatActivity implements LmiDeviceManager
         jniBridge.SetEchoCancellation(true);
 
         loginCountDown = System.currentTimeMillis();
-    }
-
-    private void addActionViewView(ViewGroup frame) {
-        Button changeStatView = new Button(this);
-        changeStatView.setText(R.string.toggle_stats);
-
-        changeStatView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (jniBridge != null) {
-                    showStatistic = !showStatistic;
-                    jniBridge.setStatsVisibility(showStatistic);
-                }
-            }
-        });
-
-        frame.addView(changeStatView);
-
-        changeStatView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        changeStatView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-    }
-
-    private void addEndCallView(ViewGroup frame) {
-        Button endCall = new Button(this);
-        endCall.setText(R.string.end_call);
-        endCall.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (jniBridge != null) {
-                    jniBridge.LeaveConference();
-                }
-            }
-        });
-
-        frame.addView(endCall);
-
-        endCall.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        endCall.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
     }
 }

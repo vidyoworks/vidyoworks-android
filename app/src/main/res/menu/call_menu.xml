@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/end_call"
+        android:title="@string/end_call" />
+
+
+    <item
+        android:id="@+id/statistic"
+        android:title="@string/toggle_stats" />
+
+    <item
+        android:id="@+id/chat_message"
+        android:title="@string/send_group_chat_message" />
+
+    <item
+        android:id="@+id/cycle_camera"
+        android:title="@string/cycle_camera" />
+
+    <item
+        android:id="@+id/send_logs"
+        android:title="@string/send_logs" />
+</menu>

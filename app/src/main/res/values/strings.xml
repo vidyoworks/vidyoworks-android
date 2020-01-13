@@ -25,4 +25,5 @@
 
     <string name="send_group_chat_message">Send message</string>
     <string name="cycle_camera">Cycle camera</string>
+    <string name="send_logs">Send logs</string>
 </resources>

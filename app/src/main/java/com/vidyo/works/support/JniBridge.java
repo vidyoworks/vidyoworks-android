@@ -1,8 +1,9 @@
 package com.vidyo.works.support;
 
 import android.app.Activity;
-import android.support.annotation.Keep;
 import android.util.Log;
+
+import androidx.annotation.Keep;
 
 import com.vidyo.works.support.event.HomeBus;
 import com.vidyo.works.support.utils.AppUtils;
@@ -22,10 +23,15 @@ public class JniBridge {
     public JniBridge() {
     }
 
-    public boolean initialize(String caFileName, String logDir, String pathDir, Activity activity) {
+    public boolean initialize(Activity activity) {
+        String caFileName = AppUtils.writeCaCertificates(activity);
+        String logDir = AppUtils.getAndroidCacheDir(activity);
+        String pathDir = AppUtils.getAndroidInternalMemDir(activity);
+
         Log.i(TAG, "caFileName --> " + caFileName);
         Log.i(TAG, "logDir --> " + logDir);
         Log.i(TAG, "pathDir --> " + pathDir);
+
         Log.i(TAG, "activity --> " + activity.getClass().toString());
 
         String logLevel = "fatal error warning info@LmiApp all@AppVcsoapClient debug@App all@AppEmcpClient debug@AppGui info@AppGui debug@LmiTransport";
