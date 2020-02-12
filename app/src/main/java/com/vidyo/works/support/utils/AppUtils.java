@@ -53,8 +53,8 @@ public class AppUtils {
         String machineID = null;
 
         TelephonyManager tManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        if (tManager != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (tManager != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 machineID = tManager.getImei();
             } else {
                 machineID = tManager.getDeviceId();
