@@ -262,9 +262,6 @@ public class JniBridge {
     public native void requestActiveUsersInfo();
 
     @SuppressWarnings("JniMissingFunction")
-    public native void DisablePinnedUI(boolean state);
-
-    @SuppressWarnings("JniMissingFunction")
     public native void Configure();
 
     @SuppressWarnings("JniMissingFunction")

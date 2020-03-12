@@ -624,6 +624,16 @@ void doSetLogLevelsAndCategories(char* newLogging)
   
 }
 
+void disablePinnedUI() {
+    VidyoClientFeatureControl featureControl = {0};
+    VidyoClientFeatureControlConstructDefault(&featureControl);
+    featureControl.disableUiPinning = VIDYO_TRUE;
+
+    if (VidyoClientSetOptionalFeatures(&featureControl) == VIDYO_FALSE) {
+        LOGE("Failed to change UI pinning state");
+    }
+}
+
 JNIEXPORT jint Java_com_vidyo_works_support_JniBridge_getNoOfparticipant(JNIEnv *env, jobject jobj) {
 	return (jint)participant.numberParticipants;
 
@@ -676,6 +686,9 @@ JNIEXPORT void Java_com_vidyo_works_support_JniBridge_Construct(JNIEnv* env, job
 	} else {
         LOGE("INITIALIZE: Success");
 	}
+
+    /* Uncomment to disable UI pin */
+	// disablePinnedUI();
 
     AndroidClientSetMachineID(machineIdC);
 
@@ -1144,20 +1157,6 @@ JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_requestActiveUsers
 
     // SendActiveUsersInfo("...");
     FUNCTION_EXIT
-}
-
-/* Disable pin UI */
-JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_DisablePinnedUI(JNIEnv* env, jobject jobj, jboolean state)
-{
-    VidyoClientFeatureControl featureControl = {0};
-    VidyoClientFeatureControlConstructDefault(&featureControl);
-    featureControl.disableUiPinning = state;
-
-    if (VidyoClientSetOptionalFeatures(&featureControl) == VIDYO_FALSE) {
-        LOGE("Failed to change UI pinning state");
-    }
-
-    VidyoClientFeatureControlConstructDefault(&featureControl);
 }
 
 JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_MuteMicrophone(JNIEnv *env, jobject jobj, jboolean muteMic)
