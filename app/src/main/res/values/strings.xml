@@ -24,6 +24,10 @@
     <string name="end_call">End call</string>
 
     <string name="send_group_chat_message">Send message</string>
+
     <string name="cycle_camera">Cycle camera</string>
+    <string name="mute_camera">Mute camera</string>
+    <string name="show_camera">Show camera</string>
+
     <string name="send_logs">Send logs</string>
 </resources>

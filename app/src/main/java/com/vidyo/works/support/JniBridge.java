@@ -150,8 +150,15 @@ public class JniBridge {
     @SuppressWarnings("JniMissingFunction")
     public native void CycleCamera();
 
+    /**
+     * 0 - None
+     * 1 - Pip
+     * 2 - Dock
+     *
+     * @param mode described above
+     */
     @SuppressWarnings("JniMissingFunction")
-    public native void SetPreviewMode(int mode); // 1 - Pip, 0 - None, 2 - Dock
+    public native void SetPreviewMode(int mode);
 
     @SuppressWarnings("JniMissingFunction")
     public native void ConfigAutoLogin(boolean enable);
@@ -182,6 +189,16 @@ public class JniBridge {
 
     @SuppressWarnings("JniMissingFunction")
     public native void MuteMicrophone(boolean muteMic);
+
+    /**
+     * 0 for participant to see self video,
+     * 1 for disabling self video
+     * 2 for enabling self video only when there are no other participant in conference.
+     *
+     * @param policy described above
+     */
+    @SuppressWarnings("JniMissingFunction")
+    public native void SetLoopbackPolicy(int policy);
 
     @SuppressWarnings("JniMissingFunction")
     public native void EnterBackground();

@@ -174,6 +174,18 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
             case R.id.cycle_camera:
                 if (jniBridge != null) jniBridge.CycleCamera();
                 break;
+            case R.id.mute_camera:
+                if (jniBridge != null) {
+                    jniBridge.MuteCamera(true);
+                    jniBridge.SetPreviewMode(0);
+                }
+                break;
+            case R.id.show_camera:
+                if (jniBridge != null) {
+                    jniBridge.MuteCamera(false);
+                    jniBridge.SetPreviewMode(1);
+                }
+                break;
             case R.id.send_logs:
                 AppUtils.sendLogs(this);
                 break;
@@ -277,6 +289,9 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
             case CALLING:
                 break;
             case STARTED:
+                /* Call it after the library has started. Record will be persistent. */
+//                jniBridge.SetLoopbackPolicy(1);
+
                 AppUtils.configDestiny(this, jniBridge);
 
                 long time = (System.currentTimeMillis() - joinCountDown) / 1000;

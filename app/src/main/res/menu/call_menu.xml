@@ -19,6 +19,14 @@
         android:title="@string/cycle_camera" />
 
     <item
+        android:id="@+id/mute_camera"
+        android:title="@string/mute_camera" />
+
+    <item
+        android:id="@+id/show_camera"
+        android:title="@string/show_camera" />
+
+    <item
         android:id="@+id/send_logs"
         android:title="@string/send_logs" />
 </menu>

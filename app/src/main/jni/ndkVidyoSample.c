@@ -873,6 +873,16 @@ JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_SetCameraDevice(JN
 	VidyoClientSendRequest(VIDYO_CLIENT_REQUEST_SET_CONFIGURATION, &requestConfig, sizeof(VidyoClientRequestConfiguration));
 }
 
+JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_SetLoopbackPolicy(JNIEnv *env, jobject jobj, jint policy)
+{
+	VidyoClientRequestConfiguration requestConfig;
+	VidyoClientSendRequest(VIDYO_CLIENT_REQUEST_GET_CONFIGURATION, &requestConfig, sizeof(VidyoClientRequestConfiguration));
+
+	requestConfig.selfViewLoopbackPolicy = policy;
+
+	VidyoClientSendRequest(VIDYO_CLIENT_REQUEST_SET_CONFIGURATION, &requestConfig, sizeof(VidyoClientRequestConfiguration));
+}
+
 JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_CycleCamera(JNIEnv *env, jobject jobj)
 {
 	VidyoClientRequestConfiguration requestConfig;
@@ -929,8 +939,10 @@ JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_SetPreviewMode(JNI
 		event.previewMode = VIDYO_CLIENT_PREVIEW_MODE_DOCK;
 	} else if (value == 1) {
 		event.previewMode = VIDYO_CLIENT_PREVIEW_MODE_PIP;
-	} else { // 0
+	} else if (value == 0) { // 0
 		event.previewMode = VIDYO_CLIENT_PREVIEW_MODE_NONE;
+	} else {
+	    LOGE("Unknown value for the preview mode: %u", value);
 	}
 
 	VidyoClientSendEvent(VIDYO_CLIENT_IN_EVENT_PREVIEW, &event, sizeof(VidyoClientInEventPreview));
