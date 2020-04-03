@@ -34,7 +34,7 @@ public class JniBridge {
 
         Log.i(TAG, "activity --> " + activity.getClass().toString());
 
-        String logLevel = "fatal error warning info@LmiApp all@AppVcsoapClient debug@App all@AppEmcpClient debug@AppGui info@AppGui debug@LmiTransport";
+        String logLevel = "FATAL ERROR WARNING INFO@AppGui INFO@AppEmcpClient INFO@LmiApp INFO@App INFO@AppGuiUser INFO@AppWebProxy";
 
         String uniqueId = AppUtils.getUniqueID(activity);
         Log.e(TAG, "Machine ID: " + uniqueId);

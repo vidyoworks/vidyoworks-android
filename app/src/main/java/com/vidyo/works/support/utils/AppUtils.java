@@ -103,13 +103,6 @@ public class AppUtils {
         jniBridge.SetPixelDensity(density);
     }
 
-    public static void configAudioManager(Context context) {
-        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        if (audioManager != null) {
-            audioManager.setSpeakerphoneOn(true);
-        }
-    }
-
     public static String getAndroidInternalMemDir(Context context) {
         File fileDir = context.getFilesDir();
         return fileDir != null ? fileDir.toString() + File.separator : null;

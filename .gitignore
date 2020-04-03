@@ -1,0 +1,8 @@
+/.gradle
+/.idea
+/gradle
+/gradlew
+/local.properties
+/vidyoworks-android.iml
+/app/src/main/jni/lib/include/
+/obj

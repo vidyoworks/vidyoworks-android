@@ -25,7 +25,7 @@ public class HomeActivity extends AppCompatActivity {
             Manifest.permission.CAMERA, // Access device camera
             Manifest.permission.RECORD_AUDIO, // Audio access for Voip processing
             Manifest.permission.WRITE_EXTERNAL_STORAGE, // Write log file outside of internal app storage
-            Manifest.permission.READ_PHONE_STATE // Required for unique device id from TelephonyManager
+            Manifest.permission.READ_PHONE_STATE, // Required for unique device id from TelephonyManager
     };
 
     private static final int PERMISSIONS_RC = 0x85ba;

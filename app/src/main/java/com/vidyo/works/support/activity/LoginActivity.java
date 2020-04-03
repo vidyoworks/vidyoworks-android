@@ -96,8 +96,6 @@ public class LoginActivity extends AppCompatActivity implements LmiDeviceManager
 
         EventBus.getDefault().register(this);
 
-        AppUtils.configAudioManager(this);
-
         // Set up the login form.
         portal = findViewById(R.id.portal_field);
         user = findViewById(R.id.user_name);

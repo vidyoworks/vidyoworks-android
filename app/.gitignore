@@ -1,1 +1,4 @@
 /build
+/app.iml
+/src/main/jniLibs
+/src/main/jni/lib

@@ -106,8 +106,6 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
         key.setText(KEY);
         user.setText(NAME);
 
-        AppUtils.configAudioManager(this);
-
         user.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {

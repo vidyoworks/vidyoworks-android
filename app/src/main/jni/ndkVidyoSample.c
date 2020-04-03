@@ -701,7 +701,7 @@ JNIEXPORT void Java_com_vidyo_works_support_JniBridge_Construct(JNIEnv* env, job
 		LOGE("ApplicationJni_Construct VidyoClientStart() returned error!\n");
 	}
 
-	// AppCertificateStoreInitialize(logDirC,certificatesFileNameC,NULL);
+	AppCertificateStoreInitialize(logDirC, certificatesFileNameC, NULL);
 
 	FUNCTION_EXIT;
 }
