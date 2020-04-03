@@ -136,7 +136,7 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
         cancelButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                callEnded();
+                if (jniBridge != null) jniBridge.LeaveConference();
             }
         });
 
@@ -304,6 +304,10 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
                 break;
             case INIT_PASS:
                 Snackbar.make(user, "Library has been initialized.", Snackbar.LENGTH_SHORT).show();
+
+                if (jniBridge != null) {
+                    jniBridge.HideParticipantNames(false /* do not hide */);
+                }
                 break;
             case ERROR:
                 callEnded();
@@ -364,8 +368,6 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
 
         if (jniBridge != null) {
             jniBridge.RenderRelease();
-
-            jniBridge.LeaveConference();
         }
     }
 

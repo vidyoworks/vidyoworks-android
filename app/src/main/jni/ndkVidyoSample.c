@@ -873,6 +873,20 @@ JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_SetCameraDevice(JN
 	VidyoClientSendRequest(VIDYO_CLIENT_REQUEST_SET_CONFIGURATION, &requestConfig, sizeof(VidyoClientRequestConfiguration));
 }
 
+JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_HideParticipantNames(JNIEnv *env, jobject jobj, jboolean hide)
+{
+	VidyoClientRequestConfiguration requestConfig;
+	VidyoClientSendRequest(VIDYO_CLIENT_REQUEST_GET_CONFIGURATION, &requestConfig, sizeof(VidyoClientRequestConfiguration));
+
+    if (hide)  {
+        requestConfig.enableShowConfParticipantName = 0;
+    } else {
+        requestConfig.enableShowConfParticipantName = 1;
+    }
+
+	VidyoClientSendRequest(VIDYO_CLIENT_REQUEST_SET_CONFIGURATION, &requestConfig, sizeof(VidyoClientRequestConfiguration));
+}
+
 JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_SetLoopbackPolicy(JNIEnv *env, jobject jobj, jint policy)
 {
 	VidyoClientRequestConfiguration requestConfig;

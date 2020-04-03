@@ -290,6 +290,9 @@ public class JniBridge {
     @SuppressWarnings("JniMissingFunction")
     public native void SendGroupChatMessage(String message);
 
+    @SuppressWarnings("JniMissingFunction")
+    public native void HideParticipantNames(boolean hide);
+
     @Keep
     public void onGroupChatMessageEvent(String displayName, String message) {
         Log.i(TAG, "group chat message received! Name: " + displayName + ", Message: " + message);
