@@ -190,6 +190,9 @@ public class JniBridge {
     @SuppressWarnings("JniMissingFunction")
     public native void MuteMicrophone(boolean muteMic);
 
+    @SuppressWarnings("JniMissingFunction")
+    public native void MuteSpeaker(boolean muteSpeaker);
+
     /**
      * 0 for participant to see self video,
      * 1 for disabling self video
@@ -210,7 +213,7 @@ public class JniBridge {
     public native void StartConferenceMedia();
 
     @SuppressWarnings("JniMissingFunction")
-    public native void SetEchoCancellation(boolean aecenable);
+    public native void SetEchoCancellation(boolean enable);
 
     @SuppressWarnings("JniMissingFunction")
     public native void SetSpeakerVolume(int volume);
@@ -229,33 +232,6 @@ public class JniBridge {
 
     @SuppressWarnings("JniMissingFunction")
     public native void LeaveConference();
-
-    @SuppressWarnings("JniMissingFunction")
-    public native String[] GetMicroPhoneList();
-
-    @SuppressWarnings("JniMissingFunction")
-    public native String[] GetSpeakerList();
-
-    @SuppressWarnings("JniMissingFunction")
-    public native void SetMicValue(int micNum);
-
-    @SuppressWarnings("JniMissingFunction")
-    public native void SetSpeakerValue(int spkNum);
-
-    @SuppressWarnings("JniMissingFunction")
-    public native void SetOnJoinConfiguration(boolean isCameraMuteOnJoin, boolean isSpeakerMuteOnJoin, boolean isMicMuteOnJoin);
-
-    @SuppressWarnings("JniMissingFunction")
-    public native void muteSpeaker();
-
-    @SuppressWarnings("JniMissingFunction")
-    public native void unMuteSpeaker();
-
-    @SuppressWarnings("JniMissingFunction")
-    public native void muteAudio();
-
-    @SuppressWarnings("JniMissingFunction")
-    public native void unMuteAudio();
 
     @SuppressWarnings("JniMissingFunction")
     public native void setStatsVisibility(boolean visibility);
@@ -292,6 +268,9 @@ public class JniBridge {
 
     @SuppressWarnings("JniMissingFunction")
     public native void HideParticipantNames(boolean hide);
+
+    @SuppressWarnings("JniMissingFunction")
+    public native void ShowParticipantBorder(boolean show);
 
     @Keep
     public void onGroupChatMessageEvent(String displayName, String message) {

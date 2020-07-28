@@ -70,6 +70,10 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
     private long joinCountDown = 0L;
     private boolean showStatistic = false;
 
+    private boolean muteCamera = false;
+    private boolean muteMic = false;
+    private boolean muteSpeaker = false;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -172,16 +176,24 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
             case R.id.cycle_camera:
                 if (jniBridge != null) jniBridge.CycleCamera();
                 break;
-            case R.id.mute_camera:
+            case R.id.mute_unmute_camera:
                 if (jniBridge != null) {
-                    jniBridge.MuteCamera(true);
-                    jniBridge.SetPreviewMode(0);
+                    muteCamera = !muteCamera;
+
+                    jniBridge.MuteCamera(muteCamera);
+                    jniBridge.SetPreviewMode(muteCamera ? 0 : 1);
                 }
                 break;
-            case R.id.show_camera:
+            case R.id.mute_unmute_mic:
                 if (jniBridge != null) {
-                    jniBridge.MuteCamera(false);
-                    jniBridge.SetPreviewMode(1);
+                    muteMic = !muteMic;
+                    jniBridge.MuteSpeaker(muteMic);
+                }
+                break;
+            case R.id.mute_unmute_speaker:
+                if (jniBridge != null) {
+                    muteSpeaker = !muteSpeaker;
+                    jniBridge.MuteSpeaker(muteSpeaker);
                 }
                 break;
             case R.id.send_logs:
@@ -288,7 +300,7 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
                 break;
             case STARTED:
                 /* Call it after the library has started. Record will be persistent. */
-//                jniBridge.SetLoopbackPolicy(1);
+                jniBridge.SetLoopbackPolicy(1);
 
                 AppUtils.configDestiny(this, jniBridge);
 

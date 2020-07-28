@@ -944,7 +944,6 @@ JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_ConfigAutoLogin(JN
 	FUNCTION_EXIT
 }
 
-
 JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_SetPreviewMode(JNIEnv *env, jobject jobj, jint value)
 {
 	VidyoClientInEventPreview event;
@@ -1098,6 +1097,13 @@ JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_SetBackgroundColor
     VidyoClientSendEvent(VIDYO_CLIENT_IN_EVENT_SET_BACKGROUND_COLOR, &req, sizeof(req));
 }
 
+JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_ShowParticipantBorder(JNIEnv *env, jobject jobj, jboolean show)
+{
+	VidyoClientRequestSetBorder borderConfig;
+	borderConfig.showBorder = show;
+	VidyoClientSendRequest(VIDYO_CLIENT_REQUEST_SET_PARTICIPANT_BORDER, &borderConfig, sizeof(VidyoClientRequestSetBorder));
+}
+
 JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_PortalServiceJoinConference(JNIEnv *env, jobject jobj, jstring eid) {
     //FUNCTION_ENTRY
     LOGI("calling portal service join conference");
@@ -1186,12 +1192,18 @@ JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_requestActiveUsers
 }
 
 JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_MuteMicrophone(JNIEnv *env, jobject jobj, jboolean muteMic)
-{
-	VidyoClientInEventMute event;
-	event.willMute = muteMic;
-	VidyoClientSendEvent(VIDYO_CLIENT_IN_EVENT_MUTE_AUDIO_IN, &event, sizeof(VidyoClientInEventMute));
-}
+ {
+ 	VidyoClientInEventMute event;
+ 	event.willMute = muteMic;
+ 	VidyoClientSendEvent(VIDYO_CLIENT_IN_EVENT_MUTE_AUDIO_IN, &event, sizeof(VidyoClientInEventMute));
+ }
 
+JNIEXPORT void JNICALL Java_com_vidyo_works_support_JniBridge_MuteSpeaker(JNIEnv *env, jobject jobj, jboolean muteSpeaker)
+{
+ 	VidyoClientInEventMute event;
+ 	event.willMute = muteSpeaker;
+ 	VidyoClientSendEvent(VIDYO_CLIENT_IN_EVENT_MUTE_AUDIO_OUT, &event, sizeof(VidyoClientInEventMute));
+}
 
 JNIEXPORT jboolean JNICALL Java_com_vidyo_works_support_JniBridge_IsLinkAvailable(JNIEnv *env, jobject jobj)
 {

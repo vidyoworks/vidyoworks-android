@@ -19,12 +19,15 @@
         android:title="@string/cycle_camera" />
 
     <item
-        android:id="@+id/mute_camera"
-        android:title="@string/mute_camera" />
+        android:id="@+id/mute_unmute_camera"
+        android:title="@string/camera_on_off" />
+    <item
+        android:id="@+id/mute_unmute_mic"
+        android:title="@string/mic_on_off" />
 
     <item
-        android:id="@+id/show_camera"
-        android:title="@string/show_camera" />
+        android:id="@+id/mute_unmute_speaker"
+        android:title="@string/speaker_on_off" />
 
     <item
         android:id="@+id/send_logs"

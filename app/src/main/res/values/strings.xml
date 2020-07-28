@@ -26,8 +26,10 @@
     <string name="send_group_chat_message">Send message</string>
 
     <string name="cycle_camera">Cycle camera</string>
-    <string name="mute_camera">Mute camera</string>
-    <string name="show_camera">Show camera</string>
 
     <string name="send_logs">Send logs</string>
+
+    <string name="mic_on_off">Mic On|Off</string>
+    <string name="speaker_on_off">Speaker On|Off</string>
+    <string name="camera_on_off">Camera On|Off</string>
 </resources>
