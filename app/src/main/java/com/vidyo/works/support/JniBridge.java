@@ -278,4 +278,11 @@ public class JniBridge {
 
         EventBus.getDefault().post(new HomeBus<>(HomeBus.Call.GROUP_CHAT_MESSAGE, displayName, message));
     }
+
+    @Keep
+    public void onCameraMutedEvent(String muted) {
+        Log.i(TAG, "onCameraMutedEvent event received! Muted: " + muted);
+
+        EventBus.getDefault().post(new HomeBus<>(HomeBus.Call.CAMERA_MUTED_EVENT, muted));
+    }
 }

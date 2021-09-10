@@ -341,6 +341,10 @@ public class GuestJoinActivity extends AppCompatActivity implements LmiDeviceMan
 
                 Toast.makeText(this, "User: " + displayName + "; Message: " + chatMessage, Toast.LENGTH_SHORT).show();
                 break;
+            case CAMERA_MUTED_EVENT:
+                String muted = (String) event.getValues()[0];
+                Toast.makeText(this, "Muted: " + muted, Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 

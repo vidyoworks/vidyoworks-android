@@ -29,6 +29,7 @@ void SendActiveUsersInfo(const char *info);
 
 /* Declare method to get it referenced upper in the code */
 void OnGroupChatMessageEvent(const char *name, const char *message);
+void OnCameraMutedEvent(const boolean *isMuted);
 
 void createDetailsEntityFromDetailsAtInfo(JNIEnv *env, jobject *deObject, VidyoClientRequestParticipantDetails* entityInfo);
 void createDetailsEntity(JNIEnv *env, jobject *detailsObject, const char* name, const char* uri, const char* type);
@@ -245,6 +246,11 @@ void GuiOnOutEventCallback(VidyoClientOutEvent event, VidyoVoidPtr param, VidyoU
 
         /* Send over to the Java side */
         OnGroupChatMessageEvent(event->displayName, event->message);
+     } else if (event == VIDYO_CLIENT_OUT_EVENT_MUTED_VIDEO) {
+        LOGI("Received event: VIDYO_CLIENT_OUT_EVENT_MUTED_VIDEO");
+
+        VidyoClientOutEventMuted *event = (VidyoClientOutEventMuted*) param;
+        OnCameraMutedEvent(event->isMuted);
      }
 }
 
@@ -1292,5 +1298,40 @@ FAIL1:
 		}
 FAIL0:
         LOGE("Send OnGroupChatEvent FAILED");
+        return;
+}
+
+void OnCameraMutedEvent(const jboolean *isMuted)
+{
+        jboolean isAttached;
+        JNIEnv *env;
+        jmethodID methodID;
+
+        jstring jMuted;
+
+        LOGI("Send OnCameraMutedEvent Begin");
+
+        env = getJniEnv(&isAttached);
+        if (env == NULL) goto FAIL0;
+
+        methodID = getApplicationJniMethodId(env, applicationJniObj, "onCameraMutedEvent", "(Ljava/lang/String;)V");
+        if (methodID == NULL) goto FAIL1;
+
+        jMuted = (*env)->NewStringUTF(env, isMuted ? "1" : "0");
+
+        (*env)->CallVoidMethod(env, applicationJniObj, methodID, jMuted);
+
+		if (isAttached) {
+			(*global_vm)->DetachCurrentThread(global_vm);
+		}
+
+        LOGI("Send onCameraMutedEvent End");
+        return;
+FAIL1:
+		if (isAttached) {
+			(*global_vm)->DetachCurrentThread(global_vm);
+		}
+FAIL0:
+        LOGE("Send onCameraMutedEvent FAILED");
         return;
 }
